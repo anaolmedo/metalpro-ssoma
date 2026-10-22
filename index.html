@@ -1,1652 +1,271 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MetalPro S.A. · Plataforma de Inducción SSOMA</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #E8E9EB;
-  --card: #FFFFFF;
-  --ink: #1F2A33;
-  --mut: #5D6B77;
-  --line: #CBD0D5;
-  --steel: #2F4B63;
-  --steel-dark: #1A2836;
-  --yel: #F2B705;
-  --yel-hover: #D9A304;
-  --red: #B93A2B;
-  --grn: #2E7D4F;
-  --redbg: #F8E3E0;
-  --grnbg: #E0F0E6;
-  --yelbg: #FFF3CC;
-  --bluebg: #E3F2FD;
-  --blue: #1976D2;
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #151C24;
-    --card: #222B35;
-    --ink: #E8ECEF;
-    --mut: #9AA8B3;
-    --line: #374452;
-    --steel: #6393BC;
-    --steel-dark: #0F161E;
-    --redbg: #4A2622;
-    --grnbg: #1A3A29;
-    --yelbg: #4A3D10;
-    --bluebg: #162E45;
-    --blue: #64B5F6;
-    --red: #F07C6C;
-    --grn: #6FCB92;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg: #151C24;
-  --card: #222B35;
-  --ink: #E8ECEF;
-  --mut: #9AA8B3;
-  --line: #374452;
-  --steel: #6393BC;
-  --steel-dark: #0F161E;
-  --redbg: #4A2622;
-  --grnbg: #1A3A29;
-  --yelbg: #4A3D10;
-  --bluebg: #162E45;
-  --blue: #64B5F6;
-  --red: #F07C6C;
-  --grn: #6FCB92;
-}
-
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 'Barlow', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-h1, h2, h3, h4 { font-family: 'Barlow Condensed', Impact, sans-serif; margin: 0; letter-spacing: 0.02em; }
-
-/* ANIMACIONES */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-8px); }
-  40%, 80% { transform: translateX(8px); }
-}
-.shake { animation: shake 0.4s ease-in-out; }
-
-/* 1. PANTALLA DE LOGIN */
-#loginView {
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--steel-dark) 0%, #090D12 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-#loginView::before {
-  content: '';
-  position: absolute;
-  top: -100px; right: -100px;
-  width: 350px; height: 350px;
-  background: var(--yel);
-  opacity: 0.08;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.login-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-top: 6px solid var(--yel);
-  border-radius: 10px;
-  width: 100%;
-  max-width: 460px;
-  padding: 32px 28px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  position: relative;
-  z-index: 2;
-}
-
-.brand-header {
-  text-align: center;
-  margin-bottom: 24px;
-}
-.brand-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--steel-dark);
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: 1px solid var(--yel);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.brand-logo span { color: var(--yel); }
-.brand-header h2 { font-size: 26px; color: var(--ink); margin: 6px 0 2px; }
-.brand-header p { font-size: 14px; color: var(--mut); margin: 0; }
-
-.form-group {
-  margin-bottom: 18px;
-}
-.form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--mut);
-  margin-bottom: 6px;
-  letter-spacing: 0.04em;
-}
-.input-wrapper {
-  position: relative;
-}
-.input-wrapper input {
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 15px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--ink);
-  transition: border-color 0.2s;
-}
-.input-wrapper input:focus {
-  outline: none;
-  border-color: var(--yel);
-  box-shadow: 0 0 0 3px rgba(242, 183, 5, 0.2);
-}
-.toggle-pwd {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: var(--mut);
-  cursor: pointer;
-  font-size: 14px;
-  padding: 4px;
-}
-
-.login-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 17px;
-  font-weight: 700;
-  background: var(--yel);
-  color: #1F2A33;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.login-btn:hover { background: var(--yel-hover); }
-.login-btn:active { transform: scale(0.99); }
-
-.error-msg {
-  background: var(--redbg);
-  color: var(--red);
-  padding: 10px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  display: none;
-  border-left: 4px solid var(--red);
-}
-
-.demo-box {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px dashed var(--line);
-}
-.demo-box p { font-size: 12px; font-weight: 700; color: var(--mut); text-transform: uppercase; margin-bottom: 10px; text-align: center; }
-.demo-btn-group { display: flex; flex-direction: column; gap: 8px; }
-.demo-btn {
-  background: rgba(0,0,0,0.04);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.2s;
-}
-.demo-btn:hover { background: rgba(242, 183, 5, 0.15); border-color: var(--yel); }
-.demo-btn small { color: var(--mut); font-size: 11px; }
-
-/* 2. ESTRUCTURA PRINCIPAL DE LA PLATAFORMA */
-#appView {
-  display: none;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  background: var(--steel-dark);
-  color: #fff;
-  border-bottom: 5px solid var(--yel);
-  padding: 14px 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 24px;
-  align-items: center;
-  justify-content: space-between;
-}
-header h1 { font-size: 24px; line-height: 1.1; margin: 0; }
-header small { opacity: 0.85; display: block; font-size: 13px; font-family: 'Barlow', sans-serif; }
-
-.header-right {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-}
-
-.user-profile-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.08);
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.15);
-}
-.avatar {
-  width: 36px; height: 36px;
-  background: var(--yel);
-  color: #1F2A33;
-  font-weight: 700;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-}
-.user-info { line-height: 1.2; }
-.user-info strong { display: block; font-size: 14px; }
-.user-info small { color: rgba(255,255,255,0.7); font-size: 12px; }
-
-.role-badge {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: inline-block;
-  margin-top: 2px;
-}
-.role-badge.admin { background: var(--yel); color: #1F2A33; }
-.role-badge.colaborador { background: var(--grn); color: #fff; }
-
-.day-badge-container {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0,0,0,0.2);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-}
-.day-badge-container b { color: var(--yel); font-size: 18px; font-family: 'Barlow Condensed', sans-serif; }
-
-/* BANNER DE ROL ACTIVO */
-.role-banner {
-  background: var(--steel);
-  color: #fff;
-  padding: 8px 20px;
-  font-size: 13px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-}
-.role-banner.admin { background: #183144; border-left: 6px solid var(--yel); }
-.role-banner.colaborador { background: #1C3C28; border-left: 6px solid var(--grn); }
-
-/* NAVEGACIÓN Y TABS */
-nav {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding: 12px 20px 0;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  scrollbar-width: thin;
-}
-nav button {
-  font: 600 15px 'Barlow', sans-serif;
-  padding: 10px 16px;
-  border: 1px solid var(--line);
-  border-bottom: 0;
-  background: rgba(0,0,0,0.03);
-  color: var(--mut);
-  border-radius: 6px 6px 0 0;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-nav button:hover { background: var(--card); color: var(--ink); }
-nav button[aria-selected=true] {
-  background: var(--card);
-  color: var(--ink);
-  box-shadow: inset 0 3px 0 var(--yel);
-  border-color: var(--line);
-}
-
-main {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 20px 40px;
-  flex: 1;
-}
-
-.panel {
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 24px;
-  border-radius: 0 6px 6px 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  min-height: 400px;
-}
-
-/* UTILERÍAS & COMPONENTES */
-.st { display: inline-block; padding: 3px 10px; font-weight: 600; border-radius: 4px; font-size: 13px; text-align: center; }
-.ok { background: var(--grnbg); color: var(--grn); }
-.bad { background: var(--redbg); color: var(--red); }
-.wait { background: var(--yelbg); color: var(--ink); }
-.info { background: var(--bluebg); color: var(--blue); }
-
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
-.kpi { border: 1px solid var(--line); border-left: 6px solid var(--line); padding: 14px; border-radius: 6px; background: var(--card); }
-.kpi.ok { border-left-color: var(--grn); }
-.kpi.bad { border-left-color: var(--red); }
-.kpi.wait { border-left-color: var(--yel); }
-.kpi.info { border-left-color: var(--blue); }
-.kpi b { font: 700 32px/1.1 'Barlow Condensed', sans-serif; display: block; margin-top: 4px; }
-.kpi small { color: var(--mut); font-size: 13px; font-weight: 500; }
-
-.bar { height: 8px; background: var(--line); border-radius: 4px; margin-top: 8px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--steel); transition: width 0.3s ease; }
-.bar.grn i { background: var(--grn); }
-
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-h2 { font-size: 24px; margin: 0 0 14px; color: var(--steel); border-bottom: 2px solid var(--yel); display: inline-block; padding-bottom: 2px; }
-h3 { font-size: 20px; margin: 18px 0 8px; }
-
-.alert { padding: 12px 14px; border-left: 5px solid var(--red); background: var(--redbg); margin-bottom: 12px; border-radius: 4px; }
-.alert.y { border-color: var(--yel); background: var(--yelbg); }
-.alert.g { border-color: var(--grn); background: var(--grnbg); }
-.alert.b { border-color: var(--blue); background: var(--bluebg); }
-.alert small { display: block; color: var(--mut); margin-top: 4px; font-size: 13px; }
-
-.tw { overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid var(--line); }
-table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14px; background: var(--card); }
-th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { font-size: 13px; color: var(--mut); font-weight: 700; text-transform: uppercase; background: rgba(0,0,0,0.03); }
-tr:last-child td { border-bottom: 0; }
-tr:hover { background: rgba(0,0,0,0.015); }
-
-input[type=text], input[type=number], select, textarea {
-  font: inherit;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: var(--bg);
-  color: var(--ink);
-}
-textarea { width: 100%; min-height: 80px; resize: vertical; }
-
-.btn {
-  font: 600 15px 'Barlow', sans-serif;
-  background: var(--yel);
-  color: #1F2A33;
-  border: 0;
-  padding: 9px 18px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: opacity 0.2s;
-}
-.btn:hover { opacity: 0.9; }
-.btn-steel { background: var(--steel); color: #fff; }
-.btn-grn { background: var(--grn); color: #fff; }
-.btn-red { background: var(--red); color: #fff; }
-.btn-outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
-.btn-sm { padding: 5px 10px; font-size: 13px; }
-
-.crit { border: 1px solid var(--line); padding: 12px 14px; margin-bottom: 10px; border-radius: 4px; display: flex; gap: 12px; align-items: center; background: var(--card); }
-.crit input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--steel); flex: none; cursor: pointer; }
-
-.video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px; margin-bottom: 16px; border: 1px solid var(--line); background: #000; }
-.video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
-/* MODAL SYSTEM */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.65);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-}
-.modal-overlay.active { opacity: 1; pointer-events: auto; }
-.modal {
-  background: var(--card);
-  padding: 24px;
-  border-radius: 8px;
-  max-width: 550px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  border: 1px solid var(--line);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-/* TOAST NOTIFICATION */
-#toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: var(--steel-dark); color: #fff;
-  padding: 12px 20px; border-radius: 6px;
-  border-left: 6px solid var(--yel);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  z-index: 2000; display: flex; align-items: center; gap: 10px;
-  transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
-}
-#toast.show { transform: translateY(0); opacity: 1; }
-
-.btn-logout {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-.btn-logout:hover { background: var(--red); border-color: var(--red); }
-
-.theme-toggle { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-
-@media print {
-  header, nav, .noprint, .role-banner, #loginView { display: none !important; }
-  body { background: #fff; color: #000; }
-  .panel { border: 0; box-shadow: none; padding: 0; }
-  #appView { display: block !important; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetalPro S.A. - Inducción SSOMA</title>
+    <style>
+        /* Estilos generales y colores corporativos de MetalPro */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
+        }
+        .auth-wrapper, .dashboard-container {
+            background-color: #34495e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-top: 5px solid #f1c40f; /* Color amarillo alerta de seguridad */
+        }
+        .auth-wrapper {
+            max-width: 400px;
+            margin: 80px auto;
+        }
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+        h1, h2, h3 { color: #f1c40f; }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: none;
+            box-sizing: border-box;
+        }
+        input, select { background-color: #ecf0f1; color: #2c3e50; }
+        button {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #d4ac0d; }
+        a { color: #3498db; text-decoration: none; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #7f8c8d;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        header button { width: auto; padding: 10px 20px; }
+        .module-list { list-style: none; padding: 0; }
+        .module-list li {
+            background: #2c3e50;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-left: 4px solid #f1c40f;
+            border-radius: 4px;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .kpi-card {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #7f8c8d;
+        }
+        .kpi-card h4 { margin: 0 0 10px 0; color: #bdc3c7; }
+        .kpi-card .value { font-size: 24px; font-weight: bold; color: #2ecc71; }
+    </style>
 </head>
 <body>
 
-<!-- 1. PANTALLA DE AUTENTICACIÓN (LOGIN) -->
-<div id="loginView">
-  <div class="login-card" id="loginCard">
-    <div class="brand-header">
-      <div class="brand-logo">METALPRO <span>SSOMA</span></div>
-      <h2>Acceso a Inducción</h2>
-      <p>Plataforma de Control de Seguridad y Medio Ambiente</p>
-    </div>
-
-    <div id="loginError" class="error-msg">Credenciales incorrectas. Verifique su código y contraseña.</div>
-
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="inputCode">Código de Ingreso / DNI</label>
-        <div class="input-wrapper">
-          <input type="text" id="inputCode" placeholder="Ej: 77123456 o SSOMA2026" required autocomplete="username">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputPass">Contraseña</label>
-        <div class="input-wrapper">
-          <input type="password" id="inputPass" placeholder="••••••••" required autocomplete="current-password">
-          <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility()" title="Mostrar/Ocultar clave">👁️</button>
-        </div>
-      </div>
-
-      <button type="submit" class="login-btn">
-        <span>Ingresar a la Plataforma</span> ➔
-      </button>
-    </form>
-
-    <div class="demo-box">
-      <p>Credenciales de Prueba (Demo)</p>
-      <div class="demo-btn-group">
-        <button class="demo-btn" onclick="fillDemo('77123456', 'colab123')">
-          <div>
-            <strong>Carlos Mendoza</strong><br>
-            <small>Operador CNC (Colaborador)</small>
-          </div>
-          <span class="st ok">Colaborador</span>
-        </button>
-
-        <button class="demo-btn" onclick="fillDemo('88234567', 'colab123')">
-          <div>
-            <strong>Ana Gómez</strong><br>
-            <small>Soldadora 6G (Colaborador)</small>
-          </div>
-          <span class="st ok">Colaborador</span>
-        </button>
-
-        <button class="demo-btn" onclick="fillDemo('SSOMA2026', 'admin123')">
-          <div>
-            <strong>Ing. Roberto Silva</strong><br>
-            <small>Coordinador SSOMA (Administrador)</small>
-          </div>
-          <span class="st wait">Coordinador</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- 2. PLATAFORMA DE TRABAJO (APP VIEW) -->
-<div id="appView">
-  <header>
-    <div>
-      <h1>MetalPro S.A. · Inducción SSOMA</h1>
-      <small>Sistema de Control y Gestión de Seguridad Industrial</small>
-    </div>
-
-    <div class="header-right">
-      <div class="user-profile-card">
-        <div class="avatar" id="hdrAvatar">CM</div>
-        <div class="user-info">
-          <strong id="hdrName">Carlos Mendoza</strong>
-          <small id="hdrSub">Operador CNC · Maestranza</small>
-        </div>
-      </div>
-
-      <div class="day-badge-container">
-        <span>Día SSOMA:</span>
-        <b id="hdrDay">Día 8</b>
-      </div>
-
-      <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
-      <button class="btn-logout" onclick="confirmLogout()">Cerrar Sesión</button>
-    </div>
-  </header>
-
-  <div id="roleBanner" class="role-banner colaborador">
-    <div>
-      <span id="roleBadge" class="role-badge colaborador">NUEVO COLABORADOR</span>
-      <span id="roleBannerDesc" style="margin-left: 10px;">Acceso exclusivo a su itinerario personal de inducción.</span>
-    </div>
-    <div id="adminUserSelector" class="noprint" style="display:none; font-size: 13px;">
-      <span>Gestionando a: </span>
-      <select id="selectManagedUser" onchange="changeManagedUser(this.value)" style="font-size:12px; padding:2px 6px;"></select>
-    </div>
-  </div>
-
-  <nav role="tablist" id="nav"></nav>
-
-  <main>
-    <div class="panel" id="v"></div>
-  </main>
-</div>
-
-<!-- SISTEMA DE TOASTS -->
-<div id="toast"><span id="toastMsg">Mensaje del sistema</span></div>
-
-<!-- SISTEMA DE MODALES -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent"></div>
-</div>
-
-
-<script>
-// ==========================================
-// BASE DE DATOS Y USUARIOS DE AUTENTICACIÓN
-// ==========================================
-const USERS = [
-  {
-    id: 1,
-    code: '77123456',
-    pass: 'colab123',
-    nombre: 'Carlos Mendoza',
-    cargo: 'Operador CNC',
-    area: 'Maestranza',
-    role: 'colaborador',
-    diaActual: 8,
-    eppEntregado: true,
-    evalAprobada: true,
-    score: 100,
-    tutor: 'Ing. Roberto Silva',
-    fechaIngreso: '2026-10-01'
-  },
-  {
-    id: 2,
-    code: '88234567',
-    pass: 'colab123',
-    nombre: 'Ana Gómez',
-    cargo: 'Soldadora 6G',
-    area: 'Estructuras',
-    role: 'colaborador',
-    diaActual: 3,
-    eppEntregado: true,
-    evalAprobada: false,
-    score: 0,
-    tutor: 'Manuel Vera',
-    fechaIngreso: '2026-10-12'
-  },
-  {
-    id: 99,
-    code: 'SSOMA2026',
-    pass: 'admin123',
-    nombre: 'Ing. Roberto Silva',
-    cargo: 'Coordinador SSOMA',
-    area: 'Prevención de Riesgos',
-    role: 'admin',
-    diaActual: 20,
-    eppEntregado: true,
-    evalAprobada: true,
-    score: 100,
-    tutor: 'Gerencia General',
-    fechaIngreso: '2020-03-15'
-  }
-];
-
-const VIDEO_CARGO = 'https://www.youtube.com/embed/U83_vBFLMI0';
-
-const DESVIACIONES = [
-  { id: 101, fecha: '2026-10-15', area: 'Maestranza', tipo: 'Condición Subestándar', descripcion: 'Falta de guarda de protección en esmeril angular de 7".', severidad: 'Alta', estado: 'Abierta', reportadoPor: 'Carlos Mendoza' },
-  { id: 102, fecha: '2026-10-17', area: 'Estructuras', tipo: 'Acto Subestándar', descripcion: 'Uso inadecuado de arnés de seguridad sin punto de anclaje certificado.', severidad: 'Alta', estado: 'En Tratamiento', reportadoPor: 'Inspector SSOMA' },
-  { id: 103, fecha: '2026-10-19', area: 'Montaje', tipo: 'Condición Subestándar', descripcion: 'Obstrucción de pasillo de evacuación con palets de material.', severidad: 'Media', estado: 'Resuelta', reportadoPor: 'Ana Gómez' }
-];
-
-const MATRIZ_IPERC = [
-  { peligro: 'Proyección de partículas incandescentes', riesgo: 'Quemaduras oculares o cutáneas', nivel: 'Alto', control: 'Careta facial de soldar + lentes de seguridad Z87 + ropa de cuero cromo.' },
-  { peligro: 'Ruido continuo (>85 dBA en Maestranza)', riesgo: 'Hipoacusia neurosensorial', nivel: 'Medio', control: 'Protección auditiva tipo copa de doble cono SNR 30dB.' },
-  { peligro: 'Manipulación de cargas pesadas', riesgo: 'Trastornos musculoesqueléticos / Lumbago', nivel: 'Medio', control: 'Uso obligatorio de puente grúa para piezas >25kg y postura ergonómica.' },
-  { peligro: 'Energía eléctrica de alta potencia', riesgo: 'Electrocución / Arco eléctrico', nivel: 'Alto', control: 'Procedimiento de Bloqueo y Etiquetado (LOTO) e inspección previa de cables.' },
-  { peligro: 'Sustancias químicas (Solventes/Pinturas)', riesgo: 'Inhalación de COVs / Dermatitis', nivel: 'Bajo', control: 'Respirador con cartuchos para vapores orgánicos N95 y guantes de nitrilo.' }
-];
-
-const PLAN_INDUCCION = [
-  { dia: 'Días 1-3', modulo: 'Módulo 1: Inducción General & Política SSOMA', temas: 'Derecho a Saber (DAS), Política de Alcohol y Drogas, Uso de EPP Básico.', evaluador: 'Coordinador SSOMA' },
-  { dia: 'Días 4-7', modulo: 'Módulo 2: Matriz IPERC & PST de Área', temas: 'Identificación de peligros en Maestranza/Estructuras, Procedimientos Seguros.', evaluador: 'Supervisor de Área' },
-  { dia: 'Días 8-12', modulo: 'Módulo 3: Trabajos de Alto Riesgo & LOTO', temas: 'Permisos de Trabajo (PETAR), Altura, Espacios Confinados, Caliente.', evaluador: 'Especialista SSOMA' },
-  { dia: 'Días 13-17', modulo: 'Módulo 4: Respuesta ante Emergencias', temas: 'Uso de extintores, rutas de evacuación, primeros auxilios, reporte de incidentes.', evaluador: 'Comité Paritario' },
-  { dia: 'Días 18-20', modulo: 'Módulo 5: Evaluación Final y Cierre', temas: 'Examen de certificación, firma de acta de compromiso y entrega de carnet.', evaluador: 'Jefe SSOMA' }
-];
-
-// CONFIGURACIÓN DE PESTAÑAS CON ACCESOS RBAC
-const TABS_CONFIG = [
-  { id: 'resumen', label: 'Mi Inducción', icon: '📋', roles: ['admin', 'colaborador'] },
-  { id: 'capacitacion', label: 'Capacitación & Video', icon: '🎥', roles: ['admin', 'colaborador'] },
-  { id: 'iperc', label: 'Matriz IPERC', icon: '⚠️', roles: ['admin', 'colaborador'] },
-  { id: 'evaluacion', label: 'Mi Evaluación', icon: '✍️', roles: ['admin', 'colaborador'] },
-  { id: 'firma', label: 'Ficha / Firma', icon: '🔏', roles: ['admin', 'colaborador'] },
-  // PESTAÑAS RESTRINGIDAS (SOLO ADMIN / COORDINADOR SSOMA)
-  { id: 'plan', label: 'Plan de Inducción', icon: '📅', roles: ['admin'] },
-  { id: 'colaboradores', label: 'Gestión Colaboradores', icon: '👥', roles: ['admin'] },
-  { id: 'tablero', label: 'Tablero KPIs', icon: '📊', roles: ['admin'] },
-  { id: 'desviaciones', label: 'Desviaciones SSOMA', icon: '🚨', roles: ['admin'] },
-  { id: 'puntos_criticos', label: 'Puntos Críticos & PETAR', icon: '⚡', roles: ['admin'] }
-];
-
-// ESTADO GLOBAL DE SESIÓN
-let state = {
-  currentUser: null,           // Usuario autenticado
-  managedUserId: 1,            // Usuario que el Admin está inspeccionando
-  activeTab: 'resumen',
-  ipercFilter: 'ALL',
-  ipercSearch: '',
-  notes: localStorage.getItem('metalpro_notes') || ''
-};
-
-
-// ==========================================
-// AUTENTICACIÓN Y MANEJO DE SESIÓN
-// ==========================================
-function fillDemo(code, pass) {
-  document.getElementById('inputCode').value = code;
-  document.getElementById('inputPass').value = pass;
-  const loginError = document.getElementById('loginError');
-  loginError.style.display = 'none';
-}
-
-function togglePasswordVisibility() {
-  const pwdInput = document.getElementById('inputPass');
-  pwdInput.type = (pwdInput.type === 'password') ? 'text' : 'password';
-}
-
-function handleLogin(e) {
-  e.preventDefault();
-  const code = document.getElementById('inputCode').value.trim();
-  const pass = document.getElementById('inputPass').value.trim();
-  const loginCard = document.getElementById('loginCard');
-  const loginError = document.getElementById('loginError');
-
-  // Buscar coincidencia exacta
-  const user = USERS.find(u => u.code.toLowerCase() === code.toLowerCase() && u.pass === pass);
-
-  if (user) {
-    loginError.style.display = 'none';
-    state.currentUser = user;
-    
-    if (user.role === 'admin') {
-      state.managedUserId = USERS.find(u => u.role === 'colaborador').id;
-    } else {
-      state.managedUserId = user.id;
-    }
-
-    state.activeTab = 'resumen';
-    
-    // Ocultar login y mostrar app
-    document.getElementById('loginView').style.display = 'none';
-    document.getElementById('appView').style.display = 'flex';
-
-    setupHeaderAndUI();
-    renderNav();
-    renderView();
-
-    showToast(`¡Bienvenido, ${user.nombre}! Acceso concedido.`);
-  } else {
-    // Error con animación shake
-    loginError.style.display = 'block';
-    loginCard.classList.remove('shake');
-    void loginCard.offsetWidth; // Trigger reflow
-    loginCard.classList.add('shake');
-  }
-}
-
-function confirmLogout() {
-  showModal(`
-    <h3>¿Cerrar Sesión?</h3>
-    <p>¿Está seguro que desea salir de la plataforma SSOMA?</p>
-    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
-      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-red" onclick="logout()">Sí, Cerrar Sesión</button>
-    </div>
-  `);
-}
-
-function logout() {
-  closeModal();
-  state.currentUser = null;
-  document.getElementById('appView').style.display = 'none';
-  document.getElementById('loginView').style.display = 'flex';
-  document.getElementById('loginForm').reset();
-  showToast('Sesión cerrada correctamente');
-}
-
-
-// ==========================================
-// CONFIGURACIÓN DE INTERFAZ & NAVEGACIÓN
-// ==========================================
-function setupHeaderAndUI() {
-  const u = state.currentUser;
-  const isColab = u.role === 'colaborador';
-
-  // Configurar Avatar
-  const initials = u.nombre.split(' ').map(n => n[0]).join('').substring(0,2);
-  document.getElementById('hdrAvatar').innerText = initials;
-  document.getElementById('hdrName').innerText = u.nombre;
-  document.getElementById('hdrSub').innerText = `${u.cargo} · ${u.area}`;
-
-  // Configurar Banner de Rol
-  const roleBanner = document.getElementById('roleBanner');
-  const roleBadge = document.getElementById('roleBadge');
-  const roleBannerDesc = document.getElementById('roleBannerDesc');
-  const adminUserSelector = document.getElementById('adminUserSelector');
-
-  if (isColab) {
-    roleBanner.className = 'role-banner colaborador';
-    roleBadge.className = 'role-badge colaborador';
-    roleBadge.innerText = 'NUEVO COLABORADOR';
-    roleBannerDesc.innerText = 'Vista personal restringida a su proceso de inducción.';
-    adminUserSelector.style.display = 'none';
-    document.getElementById('hdrDay').innerText = `Día ${u.diaActual}`;
-  } else {
-    roleBanner.className = 'role-banner admin';
-    roleBadge.className = 'role-badge admin';
-    roleBadge.innerText = 'COORDINADOR SSOMA';
-    roleBannerDesc.innerText = 'Acceso total de administración, supervisión y auditoría SSOMA.';
-    adminUserSelector.style.display = 'inline-block';
-
-    // Rellenar selector de colaboradores administrados
-    const sel = document.getElementById('selectManagedUser');
-    const colabs = USERS.filter(us => us.role === 'colaborador');
-    sel.innerHTML = colabs.map(c => `<option value="${c.id}" ${c.id === state.managedUserId ? 'selected' : ''}>${c.nombre} (${c.area})</option>`).join('');
-    
-    const activeTarget = USERS.find(us => us.id === state.managedUserId) || u;
-    document.getElementById('hdrDay').innerText = `Día ${activeTarget.diaActual}`;
-  }
-}
-
-function changeManagedUser(userId) {
-  state.managedUserId = Number(userId);
-  const target = USERS.find(u => u.id === state.managedUserId);
-  if (target) {
-    document.getElementById('hdrDay').innerText = `Día ${target.diaActual}`;
-    showToast(`Inspeccionando perfil de: ${target.nombre}`);
-    renderView();
-  }
-}
-
-function renderNav() {
-  const nav = document.getElementById('nav');
-  const userRole = state.currentUser.role;
-
-  // Filtrar pestañas estrictamente según el ROL
-  const allowedTabs = TABS_CONFIG.filter(tab => tab.roles.includes(userRole));
-  
-  nav.innerHTML = allowedTabs.map(tab => `
-    <button role="tab" 
-            aria-selected="${tab.id === state.activeTab}" 
-            onclick="switchTab('${tab.id}')">
-      <span>${tab.icon}</span> ${tab.label}
-    </button>
-  `).join('');
-}
-
-function switchTab(tabId) {
-  const userRole = state.currentUser.role;
-  const targetTab = TABS_CONFIG.find(t => t.id === tabId);
-
-  // GUARD DE SEGURIDAD ESTRICTO (RBAC)
-  if (!targetTab || !targetTab.roles.includes(userRole)) {
-    showToast('⛔ Acceso denegado: Su perfil no posee permisos para esta pestaña');
-    state.activeTab = 'denegado';
-    renderNav();
-    renderAccesoDenegado();
-    return;
-  }
-
-  state.activeTab = tabId;
-  renderNav();
-  renderView();
-}
-
-
-// ==========================================
-// RENDERIZADO DE CONTENIDOS
-// ==========================================
-function renderView() {
-  const container = document.getElementById('v');
-  const activeUser = (state.currentUser.role === 'admin') 
-    ? (USERS.find(u => u.id === state.managedUserId) || state.currentUser)
-    : state.currentUser;
-
-  switch(state.activeTab) {
-    case 'resumen':
-      renderResumen(container, activeUser);
-      break;
-    case 'capacitacion':
-      renderCapacitacion(container, activeUser);
-      break;
-    case 'iperc':
-      renderIPERC(container);
-      break;
-    case 'evaluacion':
-      renderEvaluacion(container, activeUser);
-      break;
-    case 'firma':
-      renderFirma(container, activeUser);
-      break;
-    case 'plan':
-      renderPlan(container);
-      break;
-    case 'colaboradores':
-      renderColaboradores(container);
-      break;
-    case 'tablero':
-      renderTablero(container);
-      break;
-    case 'desviaciones':
-      renderDesviaciones(container);
-      break;
-    case 'puntos_criticos':
-      renderPuntosCriticos(container);
-      break;
-    case 'denegado':
-      renderAccesoDenegado();
-      break;
-    default:
-      container.innerHTML = '<h2>Vista no disponible</h2>';
-  }
-}
-
-function renderAccesoDenegado() {
-  const container = document.getElementById('v');
-  container.innerHTML = `
-    <div style="text-align:center; padding: 40px 20px;">
-      <div style="font-size:60px; margin-bottom:10px;">🔒</div>
-      <h2 style="color:var(--red); border:none;">Acceso Restringido por Nivel de Permiso</h2>
-      <p class="mut" style="max-width:500px; margin:0 auto 20px;">
-        Su usuario con perfil <strong>${state.currentUser.role.toUpperCase()}</strong> no posee la autorización requerida para acceder al módulo seleccionado.
-      </p>
-      <button class="btn btn-steel" onclick="switchTab('resumen')">🏠 Volver a Mi Inducción</button>
-    </div>
-  `;
-}
-
-// 1. MI INDUCCIÓN (RESUMEN)
-function renderResumen(container, user) {
-  const pct = Math.min(100, Math.round((user.diaActual / 20) * 100));
-  const isAdmin = state.currentUser.role === 'admin';
-
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
-      <div class="who" style="border:none; margin:0; padding:0;">
-        <div><span>Colaborador</span><b>${user.nombre}</b></div>
-        <div><span>Cargo</span><b>${user.cargo}</b></div>
-        <div><span>Área</span><b>${user.area}</b></div>
-        <div><span>Tutor Asignado</span><b>${user.tutor}</b></div>
-      </div>
-      <div>
-        <span class="st ${user.evalAprobada ? 'ok' : 'wait'}" style="font-size:15px; padding:6px 14px;">
-          ${user.evalAprobada ? '✅ Aprobado SSOMA' : '⏳ En Inducción'}
-        </span>
-      </div>
-    </div>
-
-    <div class="kpis">
-      <div class="kpi ${pct >= 100 ? 'ok' : 'wait'}">
-        <small>Progreso Inducción (Día ${user.diaActual} de 20)</small>
-        <b>${pct}%</b>
-        <div class="bar ${pct >= 100 ? 'grn' : ''}"><i style="width:${pct}%"></i></div>
-      </div>
-
-      <div class="kpi ${user.eppEntregado ? 'ok' : 'bad'}">
-        <small>Estatus Entrega EPP</small>
-        <b>${user.eppEntregado ? 'COMPLETO' : 'PENDIENTE'}</b>
-        <small>${user.eppEntregado ? 'Casco, Zapatos Dieléctricos, Lentes' : 'Falta firma de cargo'}</small>
-      </div>
-
-      <div class="kpi ${user.evalAprobada ? 'ok' : 'bad'}">
-        <small>Examen SSOMA</small>
-        <b>${user.evalAprobada ? 'APROBADO' : 'PENDIENTE'}</b>
-        <small>Nota: ${user.score}% (Requerido: 80%)</small>
-      </div>
-    </div>
-
-    <div class="cols">
-      <div>
-        <h2>Hitos & Obligaciones para Día ${user.diaActual}</h2>
-        ${user.diaActual <= 3 ? `
-          <div class="alert y">
-            <strong>Módulo Inicial: Políticas SSOMA & EPP Básico</strong>
-            <small>Uso obligatorio de EPP en nave industrial y lectura del DAS (Derecho a Saber).</small>
-          </div>
-        ` : user.diaActual <= 12 ? `
-          <div class="alert b">
-            <strong>Módulo Intermedio: Permisos de Trabajo en Altura & Fuego</strong>
-            <small>Asegúrese de revisar la Matriz IPERC antes de intervenir áreas de corte/soldadura.</small>
-          </div>
-        ` : `
-          <div class="alert g">
-            <strong>Módulo Avanzado: Autoevaluación & Certificación</strong>
-            <small>Etapa de evaluación final y firma digital del acta de inducción.</small>
-          </div>
-        `}
-
-        <h3>Compromisos Críticos de Seguridad</h3>
-        <div class="crit">
-          <input type="checkbox" checked disabled>
-          <span>Lectura y recepción de Charla DAS de ingreso.</span>
-        </div>
-        <div class="crit">
-          <input type="checkbox" ${user.eppEntregado ? 'checked' : ''} ${isAdmin ? '' : 'disabled'} onchange="toggleEPPStatus(${user.id})">
-          <span>Recepción y ajuste de EPP Estándar MetalPro.</span>
-        </div>
-        <div class="crit">
-          <input type="checkbox" ${user.evalAprobada ? 'checked' : ''} disabled>
-          <span>Aprobación del Cuestionario de Seguridad.</span>
-        </div>
-      </div>
-
-      <div>
-        <h2>Alertas de Planta & Avisos SSOMA</h2>
-        <div class="alert y">
-          <strong>Uso Obligatorio de Tapones Auditivos</strong>
-          <small>El área de Maestranza supera los 85 dBA. Protección obligatoria.</small>
-        </div>
-        <div class="alert g">
-          <strong>Récord de Seguridad</strong>
-          <small>45 días consecutivos sin accidentes con tiempo perdido (CTP).</small>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function toggleEPPStatus(userId) {
-  const u = USERS.find(user => user.id === userId);
-  if (u) {
-    u.eppEntregado = !u.eppEntregado;
-    showToast(`Estatus EPP actualizado para ${u.nombre}`);
-    renderView();
-  }
-}
-
-// 2. CAPACITACIÓN & VIDEO
-function renderCapacitacion(container, user) {
-  container.innerHTML = `
-    <h2>Capacitación Audiovisual: PST para ${user.cargo}</h2>
-    <p class="mut">Vea el video de inducción operativa sobre Procedimientos Seguros de Trabajo (PST).</p>
-
-    <div class="cols">
-      <div>
-        <div class="video-container">
-          <iframe src="${VIDEO_CARGO}" title="Video SSOMA" allowfullscreen></iframe>
-        </div>
-      </div>
-
-      <div>
-        <h3>Notas Personales de Capacitación</h3>
-        <p class="mut" style="font-size:13px">Escriba observaciones o dudas para consultar con su prevencionista.</p>
-        <textarea id="notesArea" placeholder="Ej: Consultar por la renovación de cartuchos para vapores...">${state.notes}</textarea>
-        <button class="btn btn-steel" style="margin-top:10px" onclick="saveNotes()">💾 Guardar Notas</button>
-      </div>
-    </div>
-  `;
-}
-
-function saveNotes() {
-  const val = document.getElementById('notesArea').value;
-  state.notes = val;
-  localStorage.setItem('metalpro_notes', val);
-  showToast('Notas guardadas correctamente');
-}
-
-// 3. MATRIZ IPERC
-function renderIPERC(container) {
-  let filtered = MATRIZ_IPERC;
-
-  if (state.ipercFilter !== 'ALL') {
-    filtered = filtered.filter(i => i.nivel === state.ipercFilter);
-  }
-  if (state.ipercSearch.trim() !== '') {
-    const q = state.ipercSearch.toLowerCase();
-    filtered = filtered.filter(i => i.peligro.toLowerCase().includes(q) || i.riesgo.toLowerCase().includes(q) || i.control.toLowerCase().includes(q));
-  }
-
-  container.innerHTML = `
-    <h2>Matriz IPERC - Identificación de Peligros y Evaluación de Riesgos</h2>
-    <p class="mut">Buscador de controles de seguridad para puestos operativos.</p>
-
-    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; align-items:center;">
-      <input type="text" placeholder="🔍 Buscar peligro o control..." value="${state.ipercSearch}" oninput="searchIPERC(this.value)" style="flex:1; min-width:200px;">
-
-      <select onchange="filterIPERC(this.value)">
-        <option value="ALL" ${state.ipercFilter==='ALL'?'selected':''}>Todos los Niveles</option>
-        <option value="Alto" ${state.ipercFilter==='Alto'?'selected':''}>Nivel Alto</option>
-        <option value="Medio" ${state.ipercFilter==='Medio'?'selected':''}>Nivel Medio</option>
-        <option value="Bajo" ${state.ipercFilter==='Bajo'?'selected':''}>Nivel Bajo</option>
-      </select>
-    </div>
-
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>Peligro Identificado</th>
-            <th>Riesgo Asociado</th>
-            <th>Nivel</th>
-            <th>Medidas de Control Obligatorias</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${filtered.length > 0 ? filtered.map(i => `
-            <tr>
-              <td><strong>${i.peligro}</strong></td>
-              <td>${i.riesgo}</td>
-              <td><span class="st ${i.nivel==='Alto'?'bad':i.nivel==='Medio'?'wait':'ok'}">${i.nivel}</span></td>
-              <td>${i.control}</td>
-            </tr>
-          `).join('') : '<tr><td colspan="4" style="text-align:center;">No se encontraron resultados</td></tr>'}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-function searchIPERC(q) {
-  state.ipercSearch = q;
-  renderIPERC(document.getElementById('v'));
-}
-
-function filterIPERC(val) {
-  state.ipercFilter = val;
-  renderIPERC(document.getElementById('v'));
-}
-
-// 4. MI EVALUACIÓN (5 PREGUNTAS)
-function renderEvaluacion(container, user) {
-  container.innerHTML = `
-    <h2>Cuestionario de Evaluación de Conocimientos SSOMA</h2>
-    <p class="mut">Aprobación requerida: 80% o superior (4 de 5 respuestas correctas).</p>
-
-    <div id="quizContainer">
-      <form id="quizForm" onsubmit="submitQuiz(event, ${user.id})">
-        
-        <div class="crit" style="flex-direction:column; align-items:flex-start;">
-          <strong>1. ¿Qué acción debe realizar de inmediato si detecta un cable de amoladora pelado o dañado?</strong>
-          <label style="margin-top:6px"><input type="radio" name="q1" value="a" required> Usarlo con cuidado avisando a un compañero.</label>
-          <label><input type="radio" name="q1" value="b"> Detener su uso, etiquetar/bloquear el equipo y reportar a SSOMA.</label>
-          <label><input type="radio" name="q1" value="c"> Repararlo con cinta aislante común.</label>
+    <!-- 1. PANTALLA DE ACCESO Y REGISTRO -->
+    <div id="auth-container" class="auth-wrapper">
+        <div id="login-box">
+            <h2>Inducción SSOMA</h2>
+            <p>Portal Operativo MetalPro S.A.</p>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+            <p style="font-size: 14px;">¿Primer ingreso? <a href="#" id="show-register">Regístrate aquí</a></p>
         </div>
 
-        <div class="crit" style="flex-direction:column; align-items:flex-start;">
-          <strong>2. Para trabajos en altura superiores a 1.80 metros es obligatorio:</strong>
-          <label style="margin-top:6px"><input type="radio" name="q2" value="a" required> Arnés de seguridad con doble cabo de vida anclado a punto certificado + PETAR.</label>
-          <label><input type="radio" name="q2" value="b"> Tener únicamente zapatos con caña alta.</label>
-          <label><input type="radio" name="q2" value="c"> Subir con cuidado sujetándose del andamio sin arnés.</label>
-        </div>
-
-        <div class="crit" style="flex-direction:column; align-items:flex-start;">
-          <strong>3. El procedimiento LOTO (Lockout / Tagout) consiste en:</strong>
-          <label style="margin-top:6px"><input type="radio" name="q3" value="a"> Limpieza y orden de pasillos al terminar el turno.</label>
-          <label><input type="radio" name="q3" value="b" required> Bloqueo físico y etiquetado de fuentes de energía peligrosa antes de intervenir un equipo.</label>
-          <label><input type="radio" name="q3" value="c"> Medición de gases en áreas de almacenamiento.</label>
-        </div>
-
-        <div class="crit" style="flex-direction:column; align-items:flex-start;">
-          <strong>4. Ante un amago de incendio en un tablero eléctrico energizado debe usar:</strong>
-          <label style="margin-top:6px"><input type="radio" name="q4" value="a"> Agua a presión del grifo más cercano.</label>
-          <label><input type="radio" name="q4" value="b" required> Extintor de CO2 o Polvo Químico Seco (PQS) de tipo C.</label>
-          <label><input type="radio" name="q4" value="c"> Manta común de tela sintética.</label>
-        </div>
-
-        <div class="crit" style="flex-direction:column; align-items:flex-start;">
-          <strong>5. El uso y mantenimiento adecuado del EPP asignado es responsabilidad de:</strong>
-          <label style="margin-top:6px"><input type="radio" name="q5" value="a" required> El propio trabajador de forma estricta e individual.</label>
-          <label><input type="radio" name="q5" value="b"> Exclusivamente del delegado de personal.</label>
-          <label><input type="radio" name="q5" value="c"> Del departamento de compras.</label>
-        </div>
-
-        <button type="submit" class="btn btn-grn" style="margin-top:10px;">📩 Registrar y Calificar Evaluación</button>
-      </form>
-    </div>
-  `;
-}
-
-function submitQuiz(e, userId) {
-  e.preventDefault();
-  const f = e.target;
-  let correct = 0;
-
-  if (f.q1.value === 'b') correct++;
-  if (f.q2.value === 'a') correct++;
-  if (f.q3.value === 'b') correct++;
-  if (f.q4.value === 'b') correct++;
-  if (f.q5.value === 'a') correct++;
-
-  const score = (correct / 5) * 100;
-  const passed = score >= 80;
-
-  const targetUser = USERS.find(u => u.id === userId);
-  if (targetUser) {
-    targetUser.score = score;
-    targetUser.evalAprobada = passed;
-  }
-
-  showModal(`
-    <h3>Resultado de Evaluación SSOMA</h3>
-    <p>Respuestas correctas: <strong>${correct} de 5</strong></p>
-    <p>Calificación Obtenida: <strong>${score}%</strong></p>
-    
-    ${passed ? `
-      <div class="alert g">
-        <strong>¡EVALUACIÓN APROBADA!</strong> Ha demostrado los conocimientos requeridos de seguridad industrial.
-      </div>
-    ` : `
-      <div class="alert y">
-        <strong>NO APROBADO (Mínimo 80%).</strong> Por favor revise nuevamente el material y repita el cuestionario.
-      </div>
-    `}
-    <button class="btn btn-steel" onclick="closeModal(); switchTab('resumen');">Aceptar</button>
-  `);
-}
-
-// 5. FICHA Y FIRMA
-function renderFirma(container, user) {
-  container.innerHTML = `
-    <h2>Ficha Oficial de Inducción SSOMA</h2>
-    <p class="mut">Documento oficial para archivo y fiscalización de seguridad.</p>
-
-    <div style="border:1px solid var(--line); padding:24px; border-radius:6px; background:#fff; color:#000;">
-      <div style="display:flex; justify-content:space-between; border-bottom:3px solid #1F2A33; padding-bottom:12px; margin-bottom:16px;">
-        <div>
-          <h3 style="margin:0; font-size:24px; color:#1F2A33;">METALPRO S.A.</h3>
-          <small style="color:#555; font-weight:600;">GERENCIA DE SEGURIDAD INDUSTRIAL & MEDIO AMBIENTE</small>
-        </div>
-        <div style="text-align:right;">
-          <small>Código: <strong>IND-SSOMA-2026</strong></small><br>
-          <small>Fecha: ${new Date().toLocaleDateString('es-ES')}</small>
-        </div>
-      </div>
-
-      <table style="width:100%; font-size:13px; margin-bottom:16px; border:0;">
-        <tr>
-          <td style="border:0; padding:4px;"><strong>Colaborador:</strong> ${user.nombre}</td>
-          <td style="border:0; padding:4px;"><strong>Código/DNI:</strong> ${user.code}</td>
-        </tr>
-        <tr>
-          <td style="border:0; padding:4px;"><strong>Cargo:</strong> ${user.cargo}</td>
-          <td style="border:0; padding:4px;"><strong>Área:</strong> ${user.area}</td>
-        </tr>
-        <tr>
-          <td style="border:0; padding:4px;"><strong>Estatus Examen:</strong> ${user.evalAprobada ? 'APROBADO (' + user.score + '%)' : 'PENDIENTE'}</td>
-          <td style="border:0; padding:4px;"><strong>Estatus EPP:</strong> ${user.eppEntregado ? 'CONFORME' : 'PENDIENTE'}</td>
-        </tr>
-      </table>
-
-      <p style="font-size:12px; color:#333; line-height:1.5;">
-        Declaro haber recibido la Inducción de Seguridad, Salud Ocupacional y Medio Ambiente (SSOMA) de MetalPro S.A.
-        Conozco la Matriz IPERC de mi puesto, la política de uso de EPP y me comprometo a cumplir estrictamente con los PST.
-      </p>
-
-      <div style="margin-top:30px; display:flex; justify-content:space-around; text-align:center;">
-        <div>
-          <div style="border-bottom:1px solid #000; width:200px; height:45px; display:flex; align-items:flex-end; justify-content:center; font-family:cursive; font-size:16px;">
-            ${user.nombre}
-          </div>
-          <small style="display:block; margin-top:4px;">Firma del Colaborador</small>
-        </div>
-
-        <div>
-          <div style="border-bottom:1px solid #000; width:200px; height:45px; display:flex; align-items:flex-end; justify-content:center; font-family:cursive; font-size:16px;">
-            Ing. Roberto Silva
-          </div>
-          <small style="display:block; margin-top:4px;">Coordinador SSOMA</small>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-steel" style="margin-top:16px;" onclick="window.print()">🖨️ Imprimir Ficha de Inducción</button>
-  `;
-}
-
-
-// ==========================================
-// VISTAS ADMINISTRATIVAS (SOLO ADMIN)
-// ==========================================
-
-// 6. PLAN DE INDUCCIÓN
-function renderPlan(container) {
-  container.innerHTML = `
-    <h2>Plan Maestro de Inducción Corporativa</h2>
-    <p class="mut">Estructura curricular de 20 días asignada por la Coordinación SSOMA.</p>
-
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>Etapa</th>
-            <th>Módulo Formativo</th>
-            <th>Temario & Entregables</th>
-            <th>Responsable</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${PLAN_INDUCCION.map(p => `
-            <tr>
-              <td><strong>${p.dia}</strong></td>
-              <td>${p.modulo}</td>
-              <td>${p.temas}</td>
-              <td><span class="st info">${p.evaluador}</span></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-// 7. GESTIÓN DE COLABORADORES
-function renderColaboradores(container) {
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <h2>Gestión de Colaboradores en Inducción</h2>
-      <button class="btn btn-grn btn-sm" onclick="openAddUserModal()">➕ Registrar Colaborador</button>
-    </div>
-
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Cargo / Área</th>
-            <th>Día Actual</th>
-            <th>EPP</th>
-            <th>Examen SSOMA</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${USERS.filter(u => u.role === 'colaborador').map(c => `
-            <tr>
-              <td><code>${c.code}</code></td>
-              <td><strong>${c.nombre}</strong></td>
-              <td>${c.cargo} (${c.area})</td>
-              <td>
-                <input type="number" min="1" max="20" value="${c.diaActual}" onchange="updateUserDay(${c.id}, this.value)" style="width:65px;">
-              </td>
-              <td>
-                <span class="st ${c.eppEntregado?'ok':'bad'}" style="cursor:pointer" onclick="toggleEPPStatus(${c.id})">
-                  ${c.eppEntregado?'Entregado':'Pendiente'}
-                </span>
-              </td>
-              <td>
-                <span class="st ${c.evalAprobada?'ok':'wait'}">
-                  ${c.evalAprobada ? 'Aprobado (' + c.score + '%)' : 'Pendiente'}
-                </span>
-              </td>
-              <td>
-                <button class="btn btn-steel btn-sm" onclick="inspectUser(${c.id})">👁️ Inspect</button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-function updateUserDay(id, dayVal) {
-  const u = USERS.find(us => us.id === id);
-  if (u) {
-    u.diaActual = Math.max(1, Math.min(20, Number(dayVal)));
-    showToast(`Día modificado a ${u.diaActual} para ${u.nombre}`);
-    setupHeaderAndUI();
-  }
-}
-
-function inspectUser(id) {
-  state.managedUserId = id;
-  setupHeaderAndUI();
-  switchTab('resumen');
-  showToast('Modo inspección activado');
-}
-
-function openAddUserModal() {
-  showModal(`
-    <h3>Registrar Nuevo Colaborador</h3>
-    <form onsubmit="saveNewUser(event)">
-      <div style="margin-bottom:10px;">
-        <label>Código / DNI:</label>
-        <input type="text" id="newCode" required style="width:100%">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Nombre Completo:</label>
-        <input type="text" id="newName" required style="width:100%">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Cargo:</label>
-        <input type="text" id="newCargo" required style="width:100%">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Área:</label>
-        <select id="newArea" style="width:100%">
-          <option value="Maestranza">Maestranza</option>
-          <option value="Estructuras">Estructuras</option>
-          <option value="Montaje">Montaje</option>
-          <option value="Mantenimiento">Mantenimiento</option>
-        </select>
-      </div>
-      <div style="margin-bottom:15px;">
-        <label>Contraseña Acceso:</label>
-        <input type="text" id="newPass" value="colab123" required style="width:100%">
-      </div>
-      <button type="submit" class="btn btn-grn">Guardar Colaborador</button>
-      <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-    </form>
-  `);
-}
-
-function saveNewUser(e) {
-  e.preventDefault();
-  const code = document.getElementById('newCode').value;
-  const nombre = document.getElementById('newName').value;
-  const cargo = document.getElementById('newCargo').value;
-  const area = document.getElementById('newArea').value;
-  const pass = document.getElementById('newPass').value;
-
-  USERS.push({
-    id: USERS.length + 1,
-    code, pass, nombre, cargo, area,
-    role: 'colaborador',
-    diaActual: 1,
-    eppEntregado: false,
-    evalAprobada: false,
-    score: 0,
-    tutor: 'Ing. Roberto Silva',
-    fechaIngreso: new Date().toISOString().split('T')[0]
-  });
-
-  closeModal();
-  showToast('Nuevo colaborador registrado exitosamente');
-  setupHeaderAndUI();
-  renderView();
-}
-
-// 8. TABLERO DE CONTROL DE KPIS
-function renderTablero(container) {
-  const colabs = USERS.filter(u => u.role === 'colaborador');
-  const total = colabs.length;
-  const aprobados = colabs.filter(u => u.evalAprobada).length;
-  const eppOk = colabs.filter(u => u.eppEntregado).length;
-  const pctAprob = Math.round((aprobados / total) * 100);
-  const pctEpp = Math.round((eppOk / total) * 100);
-
-  container.innerHTML = `
-    <h2>Tablero KPIs de Inducción SSOMA</h2>
-    <p class="mut">Indicadores globales de cumplimiento corporativo.</p>
-
-    <div class="kpis">
-      <div class="kpi ok">
-        <small>Tasa Aprobación Examen</small>
-        <b>${pctAprob}%</b>
-        <div class="bar grn"><i style="width:${pctAprob}%"></i></div>
-      </div>
-      <div class="kpi info">
-        <small>Entrega de EPPs</small>
-        <b>${pctEpp}%</b>
-        <div class="bar"><i style="width:${pctEpp}%"></i></div>
-      </div>
-      <div class="kpi wait">
-        <small>Colaboradores Activos</small>
-        <b>${total}</b>
-      </div>
-      <div class="kpi bad">
-        <small>Desviaciones Abiertas</small>
-        <b>${DESVIACIONES.filter(d => d.estado !== 'Resuelta').length}</b>
-      </div>
-    </div>
-  `;
-}
-
-// 9. DESVIACIONES SSOMA
-function renderDesviaciones(container) {
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <h2>Hallazgos y Desviaciones SSOMA</h2>
-      <button class="btn btn-red btn-sm" onclick="openAddDesviacionModal()">🚨 Reportar Desviación</button>
-    </div>
-
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Área</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
-            <th>Severidad</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${DESVIACIONES.map(d => `
-            <tr>
-              <td>#${d.id}</td>
-              <td>${d.fecha}</td>
-              <td>${d.area}</td>
-              <td>${d.tipo}</td>
-              <td>${d.descripcion}</td>
-              <td><span class="st ${d.severidad==='Alta'?'bad':d.severidad==='Media'?'wait':'ok'}">${d.severidad}</span></td>
-              <td>
-                <select onchange="changeDesvState(${d.id}, this.value)" style="font-size:12px;">
-                  <option value="Abierta" ${d.estado==='Abierta'?'selected':''}>Abierta</option>
-                  <option value="En Tratamiento" ${d.estado==='En Tratamiento'?'selected':''}>En Tratamiento</option>
-                  <option value="Resuelta" ${d.estado==='Resuelta'?'selected':''}>Resuelta</option>
+        <div id="register-box" style="display: none;">
+            <h2>Registro de Usuario</h2>
+            <form id="register-form">
+                <input type="text" id="reg-name" placeholder="Nombre completo" required>
+                <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+                <input type="password" id="reg-password" placeholder="Contraseña" required>
+                <select id="reg-role" required>
+                    <option value="" disabled selected>Seleccione su cargo/perfil</option>
+                    <option value="colaborador">Coordinador de Seguridad (Nuevo Ingreso)</option>
+                    <option value="supervisor">Gerente de Planta (Supervisor)</option>
+                    <option value="administrador">Administrador (RR.HH. / Calidad)</option>
                 </select>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
+                <button type="submit">Crear Cuenta</button>
+            </form>
+            <p style="font-size: 14px;">¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión</a></p>
+        </div>
     </div>
-  `;
-}
 
-function changeDesvState(id, newSt) {
-  const item = DESVIACIONES.find(d => d.id === id);
-  if (item) {
-    item.estado = newSt;
-    showToast(`Estado de desviación #${id} modificado a ${newSt}`);
-  }
-}
-
-function openAddDesviacionModal() {
-  showModal(`
-    <h3>Reportar Nueva Desviación SSOMA</h3>
-    <form onsubmit="saveDesviacion(event)">
-      <div style="margin-bottom:10px;">
-        <label>Área:</label>
-        <select id="desvArea" style="width:100%">
-          <option value="Maestranza">Maestranza</option>
-          <option value="Estructuras">Estructuras</option>
-          <option value="Montaje">Montaje</option>
-        </select>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Tipo:</label>
-        <select id="desvTipo" style="width:100%">
-          <option value="Condición Subestándar">Condición Subestándar</option>
-          <option value="Acto Subestándar">Acto Subestándar</option>
-        </select>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Severidad:</label>
-        <select id="desvSev" style="width:100%">
-          <option value="Alta">Alta</option>
-          <option value="Media">Media</option>
-          <option value="Baja">Baja</option>
-        </select>
-      </div>
-      <div style="margin-bottom:15px;">
-        <label>Descripción:</label>
-        <textarea id="desvDesc" required style="width:100%"></textarea>
-      </div>
-      <button type="submit" class="btn btn-red">Registrar Hallazgo</button>
-      <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-    </form>
-  `);
-}
-
-function saveDesviacion(e) {
-  e.preventDefault();
-  DESVIACIONES.push({
-    id: 100 + DESVIACIONES.length + 1,
-    fecha: new Date().toISOString().split('T')[0],
-    area: document.getElementById('desvArea').value,
-    tipo: document.getElementById('desvTipo').value,
-    severidad: document.getElementById('desvSev').value,
-    descripcion: document.getElementById('desvDesc').value,
-    estado: 'Abierta',
-    reportadoPor: state.currentUser.nombre
-  });
-
-  closeModal();
-  showToast('Desviación registrada correctamente');
-  renderView();
-}
-
-// 10. PUNTOS CRÍTICOS & PETAR
-function renderPuntosCriticos(container) {
-  container.innerHTML = `
-    <h2>Puntos Críticos de Control & Permisos PETAR</h2>
-    <p class="mut">Gestión de permisos de alto riesgo en instalaciones.</p>
-
-    <div class="cols">
-      <div class="crit" style="flex-direction:column; align-items:flex-start;">
-        <span class="st bad">TRABAJOS EN ALTURA (>1.80m)</span>
-        <ul style="padding-left:20px; font-size:13px; margin-top:8px;">
-          <li>Uso obligatorio de arnés con doble cabo.</li>
-          <li>Punto de anclaje certificado (5000 lbs).</li>
-        </ul>
-        <button class="btn btn-steel btn-sm" onclick="showToast('PETAR Altura emitido')">📄 Emitir PETAR Altura</button>
-      </div>
-
-      <div class="crit" style="flex-direction:column; align-items:flex-start;">
-        <span class="st wait">TRABAJOS EN CALIENTE</span>
-        <ul style="padding-left:20px; font-size:13px; margin-top:8px;">
-          <li>Extintor PQS de 10kg presente.</li>
-          <li>Biombo protector de soldadura.</li>
-        </ul>
-        <button class="btn btn-steel btn-sm" onclick="showToast('PETAR Caliente emitido')">📄 Emitir PETAR Caliente</button>
-      </div>
+    <!-- 2. PLATAFORMA PRINCIPAL (Oculta hasta iniciar sesión) -->
+    <div id="app-dashboard" class="dashboard-container" style="display: none;">
+        <header>
+            <div>
+                <h2 style="margin: 0;">MetalPro S.A.</h2>
+                <span id="user-greeting" style="color: #bdc3c7;">Bienvenido</span>
+            </div>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </header>
+        
+        <!-- VISTA: COORDINADOR SSOMA (Ruta de Aprendizaje) -->
+        <div id="vista-colaborador" style="display: none;">
+            <h3>Ruta Progresiva de Inducción</h3>
+            <p>Por favor, completa los módulos teóricos antes de solicitar la evaluación práctica en terreno.</p>
+            <ul class="module-list">
+                <li><strong>Módulo 1:</strong> Presentación de la Empresa y Normativa Interna</li>
+                <li><strong>Módulo 2:</strong> Identificación de Riesgos en Planta (Matriz IPER)</li>
+                <li><strong>Módulo 3:</strong> Sistema de Gestión SSOMA e ISO 45001</li>
+                <li><strong>Módulo 4:</strong> Permisos de Trabajo Seguro (PTS) y Bloqueo LOTO</li>
+                <li><strong>Módulo 5:</strong> Uso de Software de Gestión HSE</li>
+            </ul>
+        </div>
+        
+        <!-- VISTA: GERENTE DE PLANTA (Dashboard de Control de Gestión) -->
+        <div id="vista-supervisor" style="display: none;">
+            <h3>Tablero de Seguimiento Operativo</h3>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h4>Avance Global</h4>
+                    <div class="value">60%</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Adherencia al Cronograma</h4>
+                    <div class="value">90%</div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Eficacia del Aprendizaje</h4>
+                    <div class="value">85%</div>
+                </div>
+            </div>
+            <h3 style="margin-top: 30px;">Alertas de Desviación</h3>
+            <ul class="module-list">
+                <li style="border-left-color: #e74c3c;"><strong>Alerta:</strong> Falla Teórica ISO 45001. Acción requerida: Cargar módulo de refuerzo.</li>
+                <li style="border-left-color: #f39c12;"><strong>Aviso:</strong> Validación en terreno pendiente para Permisos de Alto Riesgo.</li>
+            </ul>
+        </div>
+        
+        <!-- VISTA: RR.HH. / CALIDAD (Administración) -->
+        <div id="vista-administrador" style="display: none;">
+            <h3>Panel de Configuración</h3>
+            <ul class="module-list">
+                <li>Gestión de Usuarios y Asignación de Roles</li>
+                <li>Configuración de Metas KPI (Tiempos de adaptación y puntajes)</li>
+                <li>Carga de nuevo material documental ISO 45001</li>
+            </ul>
+        </div>
     </div>
-  `;
-}
 
+    <!-- 3. LÓGICA JAVASCRIPT -->
+    <script>
+        // Alternar entre pantallas de Login y Registro
+        document.getElementById('show-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('register-box').style.display = 'block';
+        });
 
-// ==========================================
-// SISTEMA DE MODALES Y TOASTS
-// ==========================================
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastMsg').innerText = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
-}
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('register-box').style.display = 'none';
+            document.getElementById('login-box').style.display = 'block';
+        });
 
-function showModal(html) {
-  document.getElementById('modalContent').innerHTML = html;
-  document.getElementById('modalOverlay').classList.add('active');
-}
+        // Registrar un nuevo usuario en LocalStorage
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const role = document.getElementById('reg-role').value;
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-}
+            let users = JSON.parse(localStorage.getItem('metalpro_users')) || [];
+            
+            if (users.find(u => u.email === email)) {
+                alert('Este correo ya se encuentra registrado en el sistema.');
+                return;
+            }
 
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
-}
-</script>
+            users.push({ name, email, password, role });
+            localStorage.setItem('metalpro_users', JSON.stringify(users));
+            
+            alert('Cuenta creada exitosamente. Proceda a iniciar sesión.');
+            document.getElementById('register-form').reset();
+            document.getElementById('show-login').click();
+        });
+
+        // Validar credenciales de inicio de sesión
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            let users = JSON.parse(localStorage.getItem('metalpro_users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                sessionStorage.setItem('metalpro_active_session', JSON.stringify(user));
+                cargarEntornoDeTrabajo(user);
+            } else {
+                alert('Credenciales incorrectas. Verifique su correo y contraseña.');
+            }
+        });
+
+        // Configurar la vista según el cargo del usuario
+        function cargarEntornoDeTrabajo(user) {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('app-dashboard').style.display = 'block';
+            
+            // Formatear el saludo
+            const roleName = user.role === 'colaborador' ? 'Coordinador SSOMA' : 
+                             user.role === 'supervisor' ? 'Gerente de Planta' : 'Administrador';
+            document.getElementById('user-greeting').innerText = `${user.name} | ${roleName}`;
+
+            // Ocultar todos los paneles
+            document.getElementById('vista-colaborador').style.display = 'none';
+            document.getElementById('vista-supervisor').style.display = 'none';
+            document.getElementById('vista-administrador').style.display = 'none';
+
+            // Habilitar únicamente el panel correspondiente al rol
+            if (user.role === 'colaborador') {
+                document.getElementById('vista-colaborador').style.display = 'block';
+            } else if (user.role === 'supervisor') {
+                document.getElementById('vista-supervisor').style.display = 'block';
+            } else if (user.role === 'administrador') {
+                document.getElementById('vista-administrador').style.display = 'block';
+            }
+        }
+
+        // Cerrar sesión
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            sessionStorage.removeItem('metalpro_active_session');
+            location.reload(); 
+        });
+
+        // Mantener la sesión activa al recargar la página
+        window.onload = () => {
+            const session = JSON.parse(sessionStorage.getItem('metalpro_active_session'));
+            if (session) {
+                cargarEntornoDeTrabajo(session);
+            }
+        };
+    </script>
 </body>
 </html>
